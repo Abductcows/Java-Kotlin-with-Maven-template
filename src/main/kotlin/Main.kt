@@ -3,26 +3,14 @@ typealias Ingredient = String
 
 data class Customer(val id: Long, val likes: List<Ingredient>, val dislikes: List<Ingredient>)
 
-val clients = read("a")
-
 fun main() {
 
-    val lcounts = ingredientCount()
-    ingredientCountDebug(lcounts)
-
-
 }
 
-
-fun solveStupid(clients: List<Customer>) {
-
-
-}
-
-fun calculateScore(include: List<Ingredient>): Long {
+fun calculateScore(customers: List<Customer>, include: List<Ingredient>): Long {
 
     val includeSet = include.toSet()
-    val like = clients.filter { include.containsAll(it.likes) }
+    val like = customers.filter { include.containsAll(it.likes) }
     val thenNotDislike = like.filter {
         for (disliked in it.dislikes) {
             if (includeSet.contains(disliked)) {
@@ -35,11 +23,11 @@ fun calculateScore(include: List<Ingredient>): Long {
     return thenNotDislike.size.toLong()
 }
 
-fun ingredientCount(): Map<Ingredient, IntArray> {
+fun ingredientCount(customers: List<Customer>): Map<Ingredient, IntArray> {
 
     val result = mutableMapOf<Ingredient, IntArray>()
 
-    for (client in clients) {
+    for (client in customers) {
         for (ingredient in client.likes) {
             result.computeIfAbsent(ingredient) { IntArray(2) { 0 } }[0]++
         }
@@ -57,13 +45,3 @@ fun ingredientCountDebug(counts: Map<Ingredient, IntArray>) {
         println("$ing: likes: ${count[0]}, dislikes: ${count[1]}")
     }
 }
-
-
-
-
-
-
-
-
-
-
