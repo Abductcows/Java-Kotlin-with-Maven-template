@@ -28,7 +28,8 @@ public class Main {
                   .forEach(res::add);
          });
 
-         System.out.printf("%s %s%n", res.size(), String.join(" ", res));
+         final long score = MainKt.calculateScore(customers, new ArrayList<>(res));
+         System.out.printf("Score %s nOfIngredients %s %s%n%n", score, res.size(), String.join(" ", res));
       }
    }
 
