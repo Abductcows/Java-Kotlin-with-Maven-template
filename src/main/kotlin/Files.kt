@@ -8,22 +8,16 @@ const val outputDir = "/home/abductcows/Desktop/"
 @SafeVarargs
 fun readAndDo(filename: String, vararg actions: BiConsumer<List<String>, List<String>>) {
 
-    val ingredientCache = mutableMapOf<String, String>()
-    val cacheGet: (String) -> String = { ingredient: String ->
-        ingredientCache.putIfAbsent(ingredient, ingredient)
-        ingredientCache[ingredient]!!
-    }
-
     BufferedReader(FileReader("src/main/resources/$filename")).use { file ->
         val customerCount = file.readLine().toInt()
 
         for (i in 0 until customerCount) {
 
             val likesStr = file.readLine().split(' ')
-            val likes = likesStr.subList(1, likesStr.size).map(cacheGet)
+            val likes = likesStr.subList(1, likesStr.size)
 
             val dislikesStr = file.readLine().split(' ')
-            val dislikes = dislikesStr.subList(1, dislikesStr.size).map(cacheGet)
+            val dislikes = dislikesStr.subList(1, dislikesStr.size)
 
             for (action in actions) {
                 action.accept(likes, dislikes)
