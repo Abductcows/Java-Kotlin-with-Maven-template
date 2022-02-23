@@ -47,7 +47,7 @@ fun readAllCustomers(filename: String): List<Customer> {
 
 fun writeAnswer(answer: String, outputName: String) {
     val outputDir: String = try {
-        File("src/main/resources/outputFileName").readLines()[0]
+        File("src/main/resources/outputFileName.txt").readLines()[0]
     } catch (e: FileNotFoundException) {
         ""
     }
