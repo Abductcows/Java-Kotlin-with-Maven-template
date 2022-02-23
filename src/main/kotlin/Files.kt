@@ -1,10 +1,12 @@
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileReader
+import java.util.function.BiConsumer
 
 const val outputDir = "/home/abductcows/Desktop/"
 
-fun read(filename: String): List<Customer> {
+@SafeVarargs
+fun readAndDo(filename: String, vararg actions: BiConsumer<List<String>, List<String>>) {
 
     val ingredientCache = mutableMapOf<String, String>()
     val cacheGet: (String) -> String = { ingredient: String ->
@@ -12,12 +14,8 @@ fun read(filename: String): List<Customer> {
         ingredientCache[ingredient]!!
     }
 
-    lateinit var customers: MutableList<Customer>
-    var customerId = 0L
-
     BufferedReader(FileReader("src/main/resources/$filename")).use { file ->
         val customerCount = file.readLine().toInt()
-        customers = ArrayList(customerCount)
 
         for (i in 0 until customerCount) {
 
@@ -27,10 +25,19 @@ fun read(filename: String): List<Customer> {
             val dislikesStr = file.readLine().split(' ')
             val dislikes = dislikesStr.subList(1, dislikesStr.size).map(cacheGet)
 
-            customers.add(Customer(customerId++, likes, dislikes))
+            for (action in actions) {
+                action.accept(likes, dislikes)
+            }
         }
     }
+}
 
+fun readAllCustomers(filename: String): List<Customer> {
+
+    val customers = ArrayList<Customer>(1025)
+    var id = 0L
+
+    readAndDo(filename, {i , j -> customers.add(Customer(id++, i, j))})
     return customers
 }
 
