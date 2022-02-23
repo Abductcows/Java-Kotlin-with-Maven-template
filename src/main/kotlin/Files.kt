@@ -1,9 +1,9 @@
 import java.io.BufferedReader
 import java.io.File
+import java.io.FileNotFoundException
 import java.io.FileReader
 import java.util.function.BiConsumer
 
-const val outputDir = "/home/abductcows/Desktop/"
 
 @SafeVarargs
 fun readAndDo(filename: String, vararg actions: BiConsumer<List<String>, List<String>>) {
@@ -45,4 +45,12 @@ fun readAllCustomers(filename: String): List<Customer> {
     return customers
 }
 
-fun writeAnswer(answer: String, qName: String) = File("$outputDir$qName").writeText("$answer\n")
+fun writeAnswer(answer: String, outputName: String) {
+    val outputDir: String = try {
+        File("src/main/resources/outputFileName").readLines()[0]
+    } catch (e: FileNotFoundException) {
+        ""
+    }
+
+    File("$outputDir/$outputName").writeText("$answer\n")
+}
