@@ -5,29 +5,31 @@ public class Main {
 
    public static void main(String[] args) {
 
-      // Read all Customers @George
-      final List<Customer> customers = FilesKt.readAllCustomers("c");
-      System.out.printf("Read %s customers%n", customers.size());
+      for (String dataset : Arrays.asList("a", "b", "c", "d", "e")) {
+         // Read all Customers @George
+         final List<Customer> customers = FilesKt.readAllCustomers(dataset);
+         System.out.printf("Read %s customers for dataset %s%n", customers.size(), dataset);
         /*FilesKt.readAndDo("a", (liked, disliked) -> {
             //TODO: next version
         });*/
 
-      // Rank their ingredients @Chris
-      TreeMap<String, Integer> likedIngredients = getRankedIngredients(true, customers);
-      TreeMap<String, Integer> dislikedIngredients = getRankedIngredients(false, customers);
-      long maxIngredientCount = maxIngredientCount(customers);
+         // Rank their ingredients @Chris
+         TreeMap<String, Integer> likedIngredients = getRankedIngredients(true, customers);
+         TreeMap<String, Integer> dislikedIngredients = getRankedIngredients(false, customers);
+         long maxIngredientCount = maxIngredientCount(customers);
 
-      // Decide which ingredients to keep @Lef
-      Set<String> res = new HashSet<>();
+         // Decide which ingredients to keep @Lef
+         Set<String> res = new HashSet<>();
 
-      customers.forEach(customer -> {
-         customer.getLikes().stream()
-               .filter(ingr -> likedIngredients.getOrDefault(ingr, -1)
-                     .compareTo(dislikedIngredients.getOrDefault(ingr, -1)) > 0)
-               .forEach(res::add);
-      });
+         customers.forEach(customer -> {
+            customer.getLikes().stream()
+                  .filter(ingredient -> likedIngredients.getOrDefault(ingredient, -1)
+                        .compareTo(dislikedIngredients.getOrDefault(ingredient, -1)) > 0)
+                  .forEach(res::add);
+         });
 
-      System.out.printf("%s %s%n", res.size(), String.join(" ", res));
+         System.out.printf("%s %s%n", res.size(), String.join(" ", res));
+      }
    }
 
 
