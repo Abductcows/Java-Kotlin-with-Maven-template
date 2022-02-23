@@ -28,10 +28,20 @@ fun readAndDo(filename: String, vararg actions: BiConsumer<List<String>, List<St
 
 fun readAllCustomers(filename: String): List<Customer> {
 
-    val customers = ArrayList<Customer>(1025)
-    var id = 0L
+    val ingredientCache = HashMap<String, String>()
+    val cacheGet: (String) -> String = { ingredient: String ->
+        ingredientCache.putIfAbsent(ingredient, ingredient)
+        ingredientCache.getValue(ingredient)
+    }
 
-    readAndDo(filename, {i , j -> customers.add(Customer(id++, i, j))})
+    val customers = ArrayList<Customer>(1025)
+    var customerId = 0L
+
+    readAndDo(filename, { i, j ->
+        val likes = i.map(cacheGet)
+        val dislikes = j.map(cacheGet)
+        customers.add(Customer(customerId++, likes, dislikes))
+    })
     return customers
 }
 
