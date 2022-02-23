@@ -28,6 +28,18 @@ public class Main {
                         .forEach(res::add);
             });
 
+            /*
+
+            likedIngredients.forEach((ingredientName, value) -> {
+                if (dislikedIngredients.get(ingredientName) == null || dislikedIngredients.get(ingredientName) < value) {
+                    if (res.size() < likedIngredients.size() / 2) {
+                        res.add(ingredientName);
+                    }
+                }
+            });
+
+             */
+
             final long score = MainKt.calculateScore(customers, new ArrayList<>(res));
             System.out.printf("Score %s nOfIngredients %s %s%n%n", score, res.size(), String.join(" ", res));
         }
@@ -51,4 +63,17 @@ public class Main {
         //Sorry for the one liner, it's been a while since I wrote java.
         return Collections.max(customers, Comparator.comparing(c -> c.getLikes().size())).getLikes().size();
     }
+
+    public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map) {
+        List<Map.Entry<K, V>> list = new ArrayList<>(map.entrySet());
+        list.sort(Map.Entry.comparingByValue());
+
+        Map<K, V> result = new LinkedHashMap<>();
+        for (Map.Entry<K, V> entry : list) {
+            result.put(entry.getKey(), entry.getValue());
+        }
+
+        return result;
+    }
+
 }
